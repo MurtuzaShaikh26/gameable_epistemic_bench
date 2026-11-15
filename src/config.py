@@ -29,8 +29,22 @@ SUBJECTS = [            # Part A subjects
 ]
 READER = M + "qwen3p8-max"       # DV reader
 JUDGE = M + "qwen3p8-max"        # policy-compliance / MASK / Omniscience judge
-READER2 = M + "glm-5p3"          # second reader (validation)
-JUDGE2 = M + "glm-5p3"           # second judge (validation)
+READER2 = M + "kimi-k3"          # second reader (validation; different family, supports no-think)
+JUDGE2 = M + "minimax-m3"        # second judge (validation; different family, supports no-think)
+
+# Per-model reasoning control. Value passed as reasoning_effort when not None.
+# 'none' disables thinking (cheap, reliable short outputs); 'low' for gpt-oss (rejects 'none');
+# None = do not pass the param (thinking-only models like glm-5p3).
+MODEL_REASONING = {
+    M + "gpt-oss-120b": "low",
+    M + "deepseek-v4p1-flash": "none",
+    M + "qwen3p8-max": "none",
+    M + "minimax-m3": "none",
+    M + "kimi-k3": "none",
+    M + "nemotron-3-ultra-nvfp4": "none",
+    M + "glm-5p3": None,                 # thinking-only; cannot disable
+    M + "minimax-m3p1-flash": "none",
+}
 
 NATURAL = [            # Part B natural models (baseline only)
     M + "gpt-oss-120b",

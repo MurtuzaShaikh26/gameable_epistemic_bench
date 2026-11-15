@@ -1,0 +1,22 @@
+{
+  "by_model": {
+    "accounts/fireworks/models/qwen3p8-max": {
+      "tokens_in": 46405,
+      "tokens_out": 13693,
+      "calls": 272,
+      "cached": 1,
+      "usd": 0.05408820000000004
+    },
+    "accounts/fireworks/models/deepseek-v4p1-flash": {
+      "tokens_in": 1793,
+      "tokens_out": 2774,
+      "calls": 14,
+      "cached": 2,
+      "usd": 0.004110300000000001
+    }
+  },
+  "price_per_mtok": 0.9,
+  "n_calls": 286,
+  "n_cached": 3,
+  "total_usd": 0.05819850000000004
+}

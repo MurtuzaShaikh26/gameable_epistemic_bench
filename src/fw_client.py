@@ -17,10 +17,10 @@ import config as C
 _lock = asyncio.Lock()
 
 
-def _key(model, messages, max_tokens, temperature):
+def _key(model, messages, max_tokens, temperature, reasoning):
     payload = json.dumps(
         {"model": model, "messages": messages, "max_tokens": max_tokens,
-         "temperature": temperature},
+         "temperature": temperature, "reasoning": reasoning},
         sort_keys=True, ensure_ascii=False,
     )
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
@@ -81,7 +81,8 @@ class Runner:
         Returns dict: {content, usage, cached, error, model, meta}."""
         if temperature is None:
             temperature = C.TEMPERATURE
-        key = _key(model, messages, max_tokens, temperature)
+        reasoning = C.MODEL_REASONING.get(model, None)
+        key = _key(model, messages, max_tokens, temperature, reasoning)
         cp = self._cache_path(key)
         if cp.exists():
             try:
@@ -95,7 +96,7 @@ class Runner:
                 pass
 
         async with self.sem:
-            result = await self._call_with_retry(model, messages, max_tokens, temperature)
+            result = await self._call_with_retry(model, messages, max_tokens, temperature, reasoning)
         result["meta"] = meta
         result["model"] = model
         # write cache only on success (has content and no error)
@@ -121,14 +122,18 @@ class Runner:
                 self._since_flush = 0
         return result
 
-    async def _call_with_retry(self, model, messages, max_tokens, temperature):
+    async def _call_with_retry(self, model, messages, max_tokens, temperature, reasoning):
         delay = 2.0
         temps_tried = set()
+        drop_reasoning = False
         for attempt in range(7):
             try:
+                kw = {}
+                if reasoning is not None and not drop_reasoning:
+                    kw["reasoning_effort"] = reasoning
                 resp = await self.client.chat.completions.create(
                     model=model, messages=messages,
-                    max_tokens=max_tokens, temperature=temperature)
+                    max_tokens=max_tokens, temperature=temperature, **kw)
                 choice = resp.choices[0]
                 content = choice.message.content or ""
                 usage = {}
@@ -139,6 +144,11 @@ class Runner:
             except Exception as e:
                 msg = str(e)
                 code = getattr(e, "status_code", None)
+                # reasoning_effort rejected by this model -> drop it and retry
+                if (not drop_reasoning and reasoning is not None
+                        and ("reasoning" in msg.lower() or "thinking" in msg.lower())):
+                    drop_reasoning = True
+                    continue
                 # temperature rejection -> fall back to 0.3 once
                 if ("temperature" in msg.lower() and temperature == 0.0
                         and 0.3 not in temps_tried):

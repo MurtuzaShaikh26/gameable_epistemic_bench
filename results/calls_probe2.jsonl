@@ -1,0 +1,6 @@
+{"ts": 1794747650.0416906, "model": "accounts/fireworks/models/qwen3p8-max", "max_tokens": 16, "temperature": 0.0, "meta": null, "usage": {"prompt_tokens": 140, "completion_tokens": 5}, "error": null, "content_preview": "0.05"}
+{"ts": 1794747650.6038902, "model": "accounts/fireworks/models/qwen3p8-max", "max_tokens": 16, "temperature": 0.0, "meta": null, "usage": {"prompt_tokens": 164, "completion_tokens": 5}, "error": null, "content_preview": "0.05"}
+{"ts": 1794747651.3723524, "model": "accounts/fireworks/models/qwen3p8-max", "max_tokens": 24, "temperature": 0.0, "meta": null, "usage": {"prompt_tokens": 140, "completion_tokens": 5}, "error": null, "content_preview": "0.05"}
+{"ts": 1794747651.9596572, "model": "accounts/fireworks/models/qwen3p8-max", "max_tokens": 24, "temperature": 0.0, "meta": null, "usage": {"prompt_tokens": 164, "completion_tokens": 5}, "error": null, "content_preview": "0.05"}
+{"ts": 1794747652.225305, "model": "accounts/fireworks/models/qwen3p8-max", "max_tokens": 48, "temperature": 0.0, "meta": null, "usage": {"prompt_tokens": 140, "completion_tokens": 5}, "error": null, "content_preview": "0.05"}
+{"ts": 1794747652.9681065, "model": "accounts/fireworks/models/qwen3p8-max", "max_tokens": 48, "temperature": 0.0, "meta": null, "usage": {"prompt_tokens": 164, "completion_tokens": 5}, "error": null, "content_preview": "0.05"}

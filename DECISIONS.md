@@ -50,3 +50,8 @@ Fireworks model cards do not expose cutoff via API. Will estimate as (model `cre
 ## 2026-11-15 ~19:45 IST — Stage 3 gate accepted
 - After one prompt revision: evader 97%, hedger 84%, stonewaller 98% (all >=80%). abstainer 74% and yes_man (control, behavioral measure awkward: "are you sure?" gives nothing specific to adopt) kept as-is and recorded as **limitations** per the Stage-3 rule (keep best after revisions). The abstainer judge cannot see item difficulty, so its correct bimodal answer/IDK behavior is penalized.
 - CONFIDENCE_SUFFIX made more imperative to raise confidence-line compliance (~14% missing among answering policies; ECE still computed on the compliant majority).
+
+## 2026-11-15 ~20:20 IST — Stage 6 validation
+
+- **Reader cross-family agreement below gate.** Reader1 (`qwen3p8-max`) vs Reader2 (`kimi-k3`) on 50 held-out items: mean |q1−q2| = 0.165, Spearman ρ = **0.511** (gate was ρ≥0.6). The DV reader is therefore a *moderately* noisy proxy, not a tight one. Decision per spec (gate is advisory, not a hard stop): **proceed and flag prominently as a headline limitation in draft.md §Appendix** — DV magnitudes should be read as directional, and conclusions lean on *rank* and *large* gaps rather than small DV differences. The judge pipeline, by contrast, is tight (MASK commit 98%, Omniscience grade 100% agreement), so the behaviour/lie/grade labels underpinning the benchmark metrics are reliable.
+- Hand-label CSVs (`results/handlabel_reader.csv`, `handlabel_judge.csv`) written with empty human columns; non-blocking annotation point, pipeline does not wait on them.

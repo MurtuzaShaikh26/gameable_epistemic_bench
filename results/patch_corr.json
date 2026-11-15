@@ -1,0 +1,9 @@
+{
+  "mask:honesty": 0.7593072675455744,
+  "mask:patch_mask": -0.8056054385890982,
+  "pushback:resistance": -0.720448862302457,
+  "pushback:patch_pushback": 0.7132981396772063,
+  "omniscience:index": 0.799391667422175,
+  "omniscience:brier_skill": 0.38333333333333336,
+  "omniscience:kalai_0.75": 0.8028368093325584
+}

@@ -1,19 +1,14 @@
-## Status at 2026-11-15 ~19:15 IST
+## Status at 2026-11-15 ~20:00 IST
 
-- **Current stage:** Stage 3 (smoke test) running; Stages 4–7 code already written.
+- **Current stage:** Stage 4 (Part A) COMPLETE; Stage 5 (Part B) running in background. Stages 6–9 code written and dry-run-verified.
 - **Done since last update:**
-  - Stage 1 setup complete: runner (disk cache + backoff + spend tracking), metrics (12/12 unit tests pass), policies, per-model reasoning control.
-  - Stage 2 data complete: all 4 datasets sampled (seed 42) — MASK 200, Pushback 200, Omniscience 250, ForecastBench 150; π balanced ≈0.5. DATA.md written.
-  - Omniscience distractors generated + spot-checked (good quality).
-  - Fixed two real bugs found pre-flight: reader was emitting preamble (truncated at 16 tok) → strengthened prompt; forecast probability parsing hardened.
-  - Full-run scripts (Part A/B), analysis+figures, and validation scripts written and committed.
-- **Key numbers so far:** unit tests 12/12; all sets π≈0.50; distractors 125 generated.
-- **Spend so far:** ~$0.05 of $90 cap (only distractors + prompt-tuning probes). Smoke test cost will be known when it finishes; full-run estimate will follow from it.
-- **Problems and decisions taken:**
-  - `gh`/TZ not available → push via git (works, creds cached); IST computed as UTC+5:30.
-  - Model catalog newer than spec → mapped to closest (gpt-oss-120b + deepseek-v4p1-flash subjects; qwen3p8-max reader/judge). See DECISIONS.md.
-  - Reasoning models: disabled thinking per-model where supported (cost control + reliable parsing); gpt-oss uses 'low', glm-5p3 is thinking-only.
-  - ForecastBench raw host unreachable → fetched via jsDelivr mirror.
-- **Estimated time to finish all implementation:** ~6–8h of wall time (dominated by Part A/B API calls, which run unattended with caching).
-- **On track for Mon 10:00 IST deadline:** YES (large margin; ~15h left).
-- **ANNOTATION NEEDED FROM YOU (non-blocking):** Stage 6 will write `results/handlabel_reader.csv` and `results/handlabel_judge.csv` with empty `human_q`/`human` columns. Filling them is OPTIONAL quality validation; the pipeline does not wait on it. Expected to be generated ~6–9h from now. You can sleep — nothing blocks on you.
+  - Stage 3 smoke passed (after one prompt-revision round): reader q-parse failure 2.4%, reader sanity OK on the three primary sets, cost extrapolation ~$25 total.
+  - PREREG.md pre-registered predictions committed before Stage 4.
+  - **Stage 4 / Part A complete:** 9,600 records — 6 policies × 2 subjects × 4 item sets (MASK 2400, Pushback 2400, Omniscience 3000, Forecast 1800). Checkpointed to `results/partA_records.json`.
+  - Stage 7 analysis pipeline dry-run end-to-end on smoke data without crashing (all figures generate; fig3 needs Part B data — expected).
+- **Key numbers so far:** unit tests 12/12; Part A 9,600 records complete; all sets π≈0.50.
+- **Spend so far:** **$9.77** of $90 cap (target $45). Part B (6 natural models, baseline only) running now; projected total still ~$20–25.
+- **Problems and decisions taken:** none new this hour. All earlier mappings/fixes recorded in DECISIONS.md.
+- **Estimated time to finish all implementation:** ~2–4h of wall time remaining (Part B API calls + analysis + draft fill), running unattended with caching.
+- **On track for Mon 10:00 IST deadline:** YES (large margin; ~14h left).
+- **ANNOTATION NEEDED FROM YOU (non-blocking):** Stage 6 will write `results/handlabel_reader.csv` and `results/handlabel_judge.csv` with empty `human_q`/`human` columns. Filling them is OPTIONAL quality validation; the pipeline does NOT wait on it and the paper completes without it. Expected ~1–2h from now. **You can sleep — nothing blocks on you.**

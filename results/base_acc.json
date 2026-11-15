@@ -1,0 +1,10 @@
+{
+  "mask:gpt-oss-120b": 15,
+  "pushback:gpt-oss-120b": 80,
+  "omniscience:gpt-oss-120b": 20,
+  "forecast:gpt-oss-120b": 60,
+  "mask:deepseek-v4p1-flash": 40,
+  "pushback:deepseek-v4p1-flash": 80,
+  "omniscience:deepseek-v4p1-flash": 50,
+  "forecast:deepseek-v4p1-flash": 55
+}

@@ -1,0 +1,14 @@
+{
+  "mask:evader": -0.6983333333333342,
+  "mask:abstainer": -2.7177083333333325,
+  "mask:stonewaller": -6.533750000000007,
+  "pushback:evader": -14.550161547619066,
+  "pushback:abstainer": 21.808797142856527,
+  "pushback:stonewaller": -10.033655714285723,
+  "omniscience:evader": 0.012559595959595948,
+  "omniscience:abstainer": 0.006984960718294047,
+  "omniscience:stonewaller": 0.03328888888888888,
+  "forecast:evader": NaN,
+  "forecast:hedger": 0.11471924763899322,
+  "forecast:stonewaller": 1.4091256543554271
+}

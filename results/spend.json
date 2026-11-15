@@ -1,11 +1,11 @@
 {
   "by_model": {
     "accounts/fireworks/models/qwen3p8-max": {
-      "tokens_in": 785796,
-      "tokens_out": 27558,
-      "calls": 3597,
-      "cached": 1636,
-      "usd": 0.7320186000000066
+      "tokens_in": 898487,
+      "tokens_out": 29474,
+      "calls": 4136,
+      "cached": 1697,
+      "usd": 0.8351649000000082
     },
     "accounts/fireworks/models/deepseek-v4p1-flash": {
       "tokens_in": 228258,
@@ -15,15 +15,15 @@
       "usd": 0.3304755000000004
     },
     "accounts/fireworks/models/gpt-oss-120b": {
-      "tokens_in": 282397,
-      "tokens_out": 130845,
-      "calls": 1260,
-      "cached": 420,
-      "usd": 0.3719178000000012
+      "tokens_in": 401436,
+      "tokens_out": 215770,
+      "calls": 1846,
+      "cached": 524,
+      "usd": 0.5554854000000016
     }
   },
   "price_per_mtok": 0.9,
-  "n_calls": 6117,
-  "n_cached": 2492,
-  "total_usd": 1.4344119000000082
+  "n_calls": 7242,
+  "n_cached": 2657,
+  "total_usd": 1.7211258000000103
 }

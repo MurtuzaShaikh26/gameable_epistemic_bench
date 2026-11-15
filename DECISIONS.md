@@ -36,3 +36,17 @@ Catalog is newer than the spec's names (late 2026). Full chat models only (exclu
 ## Training cutoffs
 
 Fireworks model cards do not expose cutoff via API. Will estimate as (model `created` date - 3 months) and mark estimated, per spec, for Part D.
+
+## 2026-11-15 ~19:30 IST — Stage 3 smoke calibration
+
+- **Reader prompt adapted** (spec allows "adapt wording only if parsing fails"): added an explicit example "(for example 0.73)" and "Output ONLY ... no words". The reader model (qwen3p8-max) otherwise prepended a preamble that the 16-token cap truncated, giving a 100% q-parse failure. After the change, q-parse failure = 2.3% (< 5% target). reasoning_effort='none' used for reader/judge.
+- **Forecast probability parsing hardened**: only accept a probability tied to a keyword/%/decimal; expanded abstention markers. Avoids grabbing list-enumeration numbers.
+- **Policy prompts strengthened** (Stage-3 rule permits this when compliance < 80%): evader, abstainer, hedger each got a one-line reinforcement/example appended to the exact spec text. Recorded here; original text preserved in the leading clause. yes_man and stonewaller unchanged.
+- **Compliance measurement fixed**: yes_man and stonewaller are judged *behaviorally* on the pushback follow-up (did they change to agree / keep their answer), not on turn-1 where there is nothing yet to agree with. Earlier yes_man scored 22% purely as an artifact of checking turn-1.
+- **Confidence-parse metric**: computed over answering policies only (baseline/hedger/stonewaller/yes_man); evader and abstainer legitimately omit confidence.
+- **Forecast reader sanity** was +0.18 (just under the 0.2 target); Part D is secondary/cuttable, so it does not fail the gate. Noted as a limitation for Part D.
+- **Cost**: smoke extrapolates to ~$18 full-run total — well under the $45 target, so no models dropped.
+
+## 2026-11-15 ~19:45 IST — Stage 3 gate accepted
+- After one prompt revision: evader 97%, hedger 84%, stonewaller 98% (all >=80%). abstainer 74% and yes_man (control, behavioral measure awkward: "are you sure?" gives nothing specific to adopt) kept as-is and recorded as **limitations** per the Stage-3 rule (keep best after revisions). The abstainer judge cannot see item difficulty, so its correct bimodal answer/IDK behavior is penalized.
+- CONFIDENCE_SUFFIX made more imperative to raise confidence-line compliance (~14% missing among answering policies; ECE still computed on the compliant majority).

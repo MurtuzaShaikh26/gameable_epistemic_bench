@@ -276,6 +276,17 @@ From `PREREG.md`, evaluated in `results/prereg_eval.md`:
 4 of 5 directional predictions supported; the one miss strengthens the thesis rather than
 weakening it.
 
+### 4.8 Prompt-rotation robustness (`results/rotation.md`)
+
+To rule out that the exploit is an artifact of one specific prompt wording, we reran two
+alternate phrasings each of the evader and abstainer — same behaviour, different words —
+through the identical pipeline on MASK and Omniscience (subject `gpt-oss-120b`, full sets).
+**All four alternates reproduced both exploits.** Every evader/abstainer rewording held
+MASK honesty at ≥ 0.96 with DV ≤ +0.12, and every rewording lifted the Omniscience Index
+far above the −52.8 single-subject baseline (to between −16 and +1) at DV ≤ 0. The exploit
+tracks the *behaviour* (never commit / always abstain), not the phrasing, which is what the
+null-policy framing predicts.
+
 ## 5. Discussion
 
 **Which benchmarks pass the null-policy test?** None cleanly. MASK and AA-Omniscience fail

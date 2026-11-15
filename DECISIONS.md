@@ -55,3 +55,12 @@ Fireworks model cards do not expose cutoff via API. Will estimate as (model `cre
 
 - **Reader cross-family agreement below gate.** Reader1 (`qwen3p8-max`) vs Reader2 (`kimi-k3`) on 50 held-out items: mean |q1−q2| = 0.165, Spearman ρ = **0.511** (gate was ρ≥0.6). The DV reader is therefore a *moderately* noisy proxy, not a tight one. Decision per spec (gate is advisory, not a hard stop): **proceed and flag prominently as a headline limitation in draft.md §Appendix** — DV magnitudes should be read as directional, and conclusions lean on *rank* and *large* gaps rather than small DV differences. The judge pipeline, by contrast, is tight (MASK commit 98%, Omniscience grade 100% agreement), so the behaviour/lie/grade labels underpinning the benchmark metrics are reliable.
 - Hand-label CSVs (`results/handlabel_reader.csv`, `handlabel_judge.csv`) written with empty human columns; non-blocking annotation point, pipeline does not wait on them.
+
+## 2026-11-16 — Stage 6b: human annotation returned
+
+- The original hand-label sheets were missing the context needed to actually annotate (pushback rows had no answer text; text truncated at 200 chars; the judge sheet didn't show the answer). Regenerated self-contained sheets via `src/make_annotation.py` (no API calls — reads partA records + samples): `annotate_reader.csv` (50), `annotate_judge_mask.csv` (50), `annotate_judge_omniscience.csv` (50), each with full text and one empty `YOUR_*` column.
+- Project owner returned filled sheets. `src/human_validation.py` computes agreement (`results/validation_human.md`, `validation_human.json`, `handlabel_filled_*.csv`):
+  - **Reader (human vs DV reader):** MAD 0.134, Pearson 0.687, **Spearman ρ=0.641 — above the 0.6 gate** and better than model-vs-model (0.511). The gate the main run missed is met once anchored to a human.
+  - **Omniscience grade (human vs judge):** 98% agreement, κ=0.97 (human-confirmed).
+  - **MASK commit/evade (human vs judge):** 81%, κ=0.63 — the noisiest component; disagreements are refusal-with-explanation answers. Flagged in draft.md Appendix; MASK commitment rate / MASK patch noted as most sensitive to judge noise.
+- Net effect: the reader-proxy limitation is downgraded from "below gate" to "meets gate against human labels, with MASK commitment as the residual caveat." draft.md Appendix updated accordingly.

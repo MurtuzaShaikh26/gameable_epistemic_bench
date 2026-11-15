@@ -21,7 +21,14 @@
 
 ### Spend: **$14.81** of $90 cap (target was $45). ~84% under target.
 
-### Annotation (OPTIONAL, nothing waits on it)
+### Human annotation — RECEIVED & INCORPORATED (2026-11-16)
+Project owner returned 50 reader + 47 MASK + 50 Omniscience labels. Results (`results/validation_human.md`):
+- Reader vs DV reader: **Spearman ρ=0.641 (above 0.6 gate)**, MAD 0.134 — upgrades the paper's main limitation.
+- Omniscience grade: 98% agreement, κ=0.97 (human-confirmed).
+- MASK commit/evade: 81%, κ=0.63 — residual caveat, flagged in draft Appendix.
+draft.md Appendix + DECISIONS.md updated.
+
+### Original annotation note (superseded)
 `results/handlabel_reader.csv` (50 rows) and `results/handlabel_judge.csv` (100 rows) have empty human columns. Filling them would upgrade the reader-proxy validation from model-vs-model to human-anchored (currently ρ=0.511 reader agreement is the paper's main stated limitation). To contribute: fill the `human_q`/`human` columns and tell me — I'll recompute agreement and update the draft. **The paper is complete and defensible without this.**
 
 All work committed and pushed to `main` (github.com/MurtuzaShaikh26/gameable_epistemic_bench).

@@ -309,16 +309,22 @@ and Omniscience by construction — close the specific hole each benchmark leave
 
 ## Appendix: Limitations and Dual-Use / Ethical Considerations
 
-- **The LLM reader is a proxy for human readers, and a moderately noisy one.** DV depends on
-  a model's estimate of what a careful human reader would conclude. Cross-family validation
-  (reader `qwen3p8-max` vs `kimi-k3`, 50 held-out items) gives mean |Δq| = 0.165 and Spearman
-  ρ = **0.511** — *below* our pre-set 0.6 gate. We therefore read DV *magnitudes* as directional
-  only and rest every conclusion on **rank** and on **large** DV gaps (e.g. baseline +0.77 vs
-  evader −0.01 on Pushback), never on small differences. The judge pipeline, by contrast, is
-  tight (MASK commit agreement 98%, Omniscience grade 100% between `qwen3p8-max` and
-  `minimax-m3`), so the lie/grade/commitment labels behind the published metrics are reliable.
-  Human hand-label sheets are pre-filled (`results/handlabel_*.csv`); human labels remain
-  future work.
+- **The LLM reader is a proxy for human readers — validated, with a known noise floor.** DV
+  depends on a model's estimate of what a careful human reader would conclude, so we validated
+  it two ways. (i) *Model-vs-model*: reader `qwen3p8-max` vs `kimi-k3` on 50 held-out items
+  gives Spearman ρ = 0.511 (below our 0.6 gate). (ii) *Human-anchored*: the project owner
+  hand-labelled the same 50 reader items, 47 MASK commit/evade judgments, and 50 Omniscience
+  grades (`results/validation_human.md`). Against the human, the DV reader does **better** than
+  the second model — mean |Δq| = **0.134**, Pearson r = 0.687, **Spearman ρ = 0.641 (above the
+  0.6 gate)**, with 76% three-way directional agreement (false-/uninformative-/true-leaning).
+  Human grading of AA-Omniscience answers confirms the judge almost perfectly (98% agreement,
+  Cohen κ = 0.97). The one genuinely noisy component is the **MASK commit-vs-evade** judgment
+  (human-vs-model 81%, κ = 0.63): disagreements concentrate on refusal-with-explanation
+  answers, where the model scores a stated fact as a commitment while a human reads the
+  refusal framing as evasion. We therefore still read DV *magnitudes* as directional and rest
+  conclusions on **rank** and on **large** gaps, and we flag the MASK commitment rate (and thus
+  the MASK patch) as the result most sensitive to judge noise. Filled label sheets:
+  `results/handlabel_filled_reader.csv`, `handlabel_filled_judge.csv`.
 - **Uniform-threshold assumption.** DV via the Brier skill score implicitly treats all
   items under one decision threshold / loss; real decisions have item-specific stakes.
 - **Prompted, not natural.** The policies show the gap is *possible*, not that models drift

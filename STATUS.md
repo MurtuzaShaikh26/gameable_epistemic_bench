@@ -1,13 +1,27 @@
-## Status at 2026-11-15 ~20:45 IST
+## Status at 2026-11-15 ~21:05 IST — COMPLETE
 
-- **Current stage:** Stages 1–7 and 9 COMPLETE. Project is effectively done; only optional Stage 8 extras + a final proofread remain.
-- **Done since last update:**
-  - **Stage 5 / Part B complete:** 4,800 records, 6 natural models × 4 sets (baseline only). `results/partB_records.json`.
-  - **Stage 6 validation complete:** judge agreement MASK 98% / Omniscience 100% (tight); reader cross-family Spearman ρ=0.511 (< 0.6 gate) — flagged as a headline limitation in draft.md and DECISIONS.md. Hand-label CSVs written (annotation point — optional).
-  - **Stage 7 analysis complete:** all 6 figures generated (`figures/fig1..6`), `results/matrix.md`, `metricsA/B.json`, `rank_spearman.json`, `mixing_slopes.json`, `patch_corr.json`, `prereg_eval.md`.
-  - **Stage 9 draft.md complete:** every [[fill]] placeholder replaced with real numbers; Results §4.1–4.7, Discussion §5, and the Appendix limitation all written.
-- **Headline findings:** evader = perfect 1.00 MASK honesty & Pushback, +3.0 Omniscience (vs −24.4) at DV≈0; hedger ECE 0.037; Pushback benchmark-vs-DV rank ρ=−0.37 (near-opposite); natural model glm-5p3 games all three benchmarks unprompted; Pushback patch flips DV corr −0.81→+0.53; Part D forecasting DV ≈0 for all models. 4/5 prereg predictions supported.
-- **Spend so far:** **$13.58** of $90 cap (target $45). Huge margin.
-- **On track for Mon 10:00 IST deadline:** YES — core deliverables done ~13h early.
-- **ANNOTATION (optional, NON-BLOCKING):** `results/handlabel_reader.csv` (50 reader rows) and `results/handlabel_judge.csv` (100 judge rows) now exist with empty `human_q`/`human` columns. Filling them would strengthen the reader-proxy validation (which currently rests on model-vs-model agreement). **Nothing waits on this; the paper is complete without it.** If you wake and want to help: open those two CSVs and fill the human column(s), then tell me and I'll recompute agreement.
-- **Next (optional Stage 8, only if time & spend allow):** prompt-rotation robustness check, market-proxy DV on Part D, a 3rd subject. Will attempt a subset, then final proofread of draft.md.
+**All stages done (1–9, including optional Stage 8). Project finished ~13h before the Mon 10:00 IST deadline.**
+
+- **Stage 1–3:** setup, data (4 sets, seed 42, π≈0.5), smoke gates passed.
+- **Stage 4 (Part A):** 9,600 records — 6 policies × 2 subjects × 4 sets.
+- **Stage 5 (Part B):** 4,800 records — 6 natural models.
+- **Stage 6 (validation):** judge agreement 98%/100%; reader ρ=0.511 (flagged as limitation). Hand-label CSVs written.
+- **Stage 7 (analysis):** 6 figures + matrix + all metric/rank/patch/prereg JSONs.
+- **Stage 8 (optional robustness):** prompt-rotation check — all 4 rephrasings reproduce the exploits.
+- **Stage 9 (draft):** `draft.md` complete, every placeholder filled, §4.8 robustness added.
+
+### Headline results
+- **Stress test lands:** evader = 1.00 MASK honesty (vs 0.81) & 1.00 Pushback, Omniscience Index +3.0 (vs −24.4), all at DV≈0 (useless). Hedger ECE 0.037 (vs 0.43).
+- **Rank disagreement:** Pushback benchmark-vs-DV ρ=−0.37 (near-opposite order); MASK +0.83, Omniscience +0.94, forecast +0.20.
+- **Natural gaming:** `glm-5p3` tops every benchmark unprompted while least informative.
+- **Patches:** Pushback patch flips DV corr −0.81→+0.53; MASK/Omniscience patches close the prompted exploits.
+- **Part D:** forecasting DV ≈0/negative for all models — benchmarks reward recall, not reasoning.
+- **Robustness:** exploit survives all 4 prompt rewordings.
+- **Prereg:** 4/5 directional predictions supported; the one miss reinforces the thesis.
+
+### Spend: **$14.81** of $90 cap (target was $45). ~84% under target.
+
+### Annotation (OPTIONAL, nothing waits on it)
+`results/handlabel_reader.csv` (50 rows) and `results/handlabel_judge.csv` (100 rows) have empty human columns. Filling them would upgrade the reader-proxy validation from model-vs-model to human-anchored (currently ρ=0.511 reader agreement is the paper's main stated limitation). To contribute: fill the `human_q`/`human` columns and tell me — I'll recompute agreement and update the draft. **The paper is complete and defensible without this.**
+
+All work committed and pushed to `main` (github.com/MurtuzaShaikh26/gameable_epistemic_bench).

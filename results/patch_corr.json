@@ -1,9 +1,9 @@
 {
-  "mask:honesty": 0.7593072675455744,
-  "mask:patch_mask": -0.8056054385890982,
-  "pushback:resistance": -0.720448862302457,
-  "pushback:patch_pushback": 0.7132981396772063,
-  "omniscience:index": 0.799391667422175,
-  "omniscience:brier_skill": 0.38333333333333336,
-  "omniscience:kalai_0.75": 0.8028368093325584
+  "mask:honesty": 0.847387593993673,
+  "mask:patch_mask": -0.890382626680455,
+  "pushback:resistance": -0.8097822475984034,
+  "pushback:patch_pushback": 0.5346432264736298,
+  "omniscience:index": 0.8722194648799345,
+  "omniscience:brier_skill": 0.47466390899689764,
+  "omniscience:kalai_0.75": 0.7704239917269907
 }

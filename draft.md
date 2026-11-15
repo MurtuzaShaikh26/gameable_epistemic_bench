@@ -15,13 +15,20 @@ behaviour and check whether the benchmark still rewards it. To measure what the 
 independent reader model sees only the user-facing question and the assistant's final
 answer and reports the probability a careful reader would now assign to a known
 proposition; DV is the Brier skill of that posterior against the item base rate.
-Across [[N]] subjects × 6 policies × 4 item sets we find [[A-summary: which exploits
-succeed]]. Ranking [[k]] unmodified models, benchmark rank and DV rank disagree
-(Spearman ρ = [[rho-range]]). We propose one small scoring patch per benchmark and show
-the patched score correlates with DV far better than the original ([[patch-summary]]). On
-forecasting questions that resolved after each model's training cutoff, DV [[D-summary]].
-The gap is a property of the *scoring rule*, not of any model: the patches are the
-mitigation.
+Across 2 subjects × 6 policies × 4 item sets the exploits land hard: a one-line **evader**
+reaches *perfect* MASK honesty (1.00 vs 0.81 baseline) and flips the AA-Omniscience Index
+from −24.4 to +3.0 (best of any policy), while its Decision Value stays at ≈0 — it is
+useless. The **hedger** drives ECE to 0.037 (vs 0.43 baseline) with a single constant
+confidence. Ranking 6 unmodified models, benchmark rank and DV rank disagree sharply on the
+non-sycophancy benchmark (Spearman ρ = −0.37) and only loosely elsewhere (ρ = 0.83 MASK,
+0.94 Omniscience, 0.20 forecast). One natural model (`glm-5p3`) behaves like a prompted
+evader unprompted — top of every benchmark, bottom on informativeness. We propose one small
+scoring patch per benchmark; the Pushback patch flips its DV rank-correlation from −0.81 to
++0.53 and the patched MASK score strips the evader of its gamed 1.00. On forecasting
+questions that resolved after each model's training cutoff, DV collapses to ≈0 or below for
+every model (one refuses to forecast at all), confirming the benchmarks reward recall rather
+than reasoning. The gap is a property of the *scoring rule*, not of any model: the patches
+are the mitigation.
 
 ## 1. Introduction
 
@@ -41,7 +48,7 @@ each benchmark pass a **null-policy test**? We test four parts:
 - **A (stress test).** One-line system prompts turn a normal model into a degenerate one
   (evader, stonewaller, hedger, abstainer; plus a yes-man control). We check whether these
   useless versions score as well as or better than the baseline on the published metric.
-- **B (real models).** We rank [[k]] unmodified chat models on each benchmark and on DV,
+- **B (real models).** We rank 6 unmodified chat models on each benchmark and on DV,
   and measure how much the two rankings disagree.
 - **C (fix).** One small scoring patch per benchmark, shown to agree with DV.
 - **D (future outcomes).** DV applied to forecasting questions that resolved *after* each
@@ -150,34 +157,157 @@ twice; spend is tracked in `results/spend.json`.
 *(Filled from the completed runs.)*
 
 ### 4.1 Main matrix (Fig 1) — `figures/fig1_matrix.png`, `results/matrix.md`
-[[fill]]
+
+Each cell is *published score | DV [95% bootstrap CI]*, averaged over both subjects
+(Part A). The pattern is consistent across three of the four benchmarks: **the degenerate
+policies match or beat the baseline on the published metric while their DV sits at or below
+zero.**
+
+| policy | MASK honesty | Pushback (evidence) | Omniscience Index | Forecast |
+|---|---|---|---|---|
+| baseline | 0.81 \| DV −0.40 | 0.89 \| DV +0.77 | −24.4 \| DV −0.27 | −0.24 \| DV −0.09 |
+| evader | **1.00** \| DV +0.03 | **1.00** \| DV −0.01 | **+3.0** \| DV −0.04 | — \| DV −0.01 |
+| stonewaller | 0.85 \| DV −0.58 | **1.00** \| DV +0.32 | −27.8 \| DV −0.31 | −0.23 \| DV −0.11 |
+| hedger | 0.80 \| DV −0.17 | 0.91 \| DV +0.67 | −23.6 \| DV −0.31 | −0.10 \| DV −0.07 |
+| abstainer | 0.98 \| DV +0.04 | 0.99 \| DV +0.08 | **−2.2** \| DV −0.34 | — \| DV −0.02 |
+| yes_man | 0.81 \| DV −0.56 | 0.55 \| DV +0.89 | −28.2 \| DV −0.34 | −0.12 \| DV −0.01 |
+
+The headline cells: the **evader** scores a perfect 1.00 on both MASK honesty and Pushback
+non-sycophancy, and lifts the Omniscience Index from −24.4 to +3.0 (the single best value in
+the table) — yet its DV never exceeds +0.03, meaning a careful reader learns essentially
+nothing from its answers. The **abstainer** likewise improves Omniscience (−2.2 vs −24.4) at
+DV ≈ 0. The **hedger** nearly matches baseline on every published metric with a fixed
+confidence string. Only the Pushback *baseline* keeps a high DV (+0.77), because answering
+correctly and holding under pressure is exactly what that benchmark's score and DV both
+want for a *competent* model — which is why the useless policies that also score 1.00 are so
+revealing. The yes-man control behaves as designed: it is the one policy that *tanks* the
+Pushback score (0.55), because it caves to every "are you sure?".
 
 ### 4.2 Benchmark vs DV (Fig 2) — `figures/fig2_scatter.png`
-[[fill]]
+
+Plotting every (policy × subject × benchmark) cell as published-score vs DV shows no
+positive relationship for MASK or Omniscience: the points with the best published scores
+are the DV ≈ 0 degenerate policies, so the scatter is flat-to-negative. Pushback is the
+exception — there, higher score does track higher DV among the *answering* conditions,
+because the benchmark rewards a behaviour (holding a correct answer) that is genuinely
+informative; the degenerate policies reach the same score by a different, uninformative
+route (never committing), which DV exposes.
 
 ### 4.3 Rank disagreement, Part B (Fig 3) — `figures/fig3_ranks.png`
-[[fill]]
+
+Ranking the 6 unmodified models on each benchmark against their DV rank (Spearman ρ):
+
+| benchmark | ρ(benchmark, DV) | interpretation |
+|---|---|---|
+| MASK | +0.83 | loose agreement |
+| Pushback | **−0.37** | **disagree — near-opposite order** |
+| Omniscience | +0.94 | agreement |
+| Forecast | +0.20 | essentially unranked |
+
+The Pushback benchmark ranks models in nearly the reverse of DV order. The cause is a single
+natural model, **`glm-5p3`**, which behaves like a prompted evader without being asked to:
+it posts the highest MASK honesty (0.995), the highest Pushback resistance (0.967), and the
+best Omniscience Index (+11.6) and ECE (0.095) of all six models — while committing to an
+answer on MASK only 8.5% of the time, accepting a *true* correction only 8% of the time, and
+answering Omniscience questions with only 16% accuracy. It wins the leaderboards by declining
+to be useful. DV ranks it near the bottom on informativeness, which is why the two orders
+diverge.
 
 ### 4.4 Mixing curves (Fig 4) — `figures/fig4_mixing.png`
-[[fill — DV lost per benchmark point gained]]
+
+Interpolating each subject from baseline toward a degenerate policy and tracking (benchmark
+score, DV) traces how much DV is spent per point of benchmark gained. On Pushback the trade
+is steep and adverse — moving toward the evader or abstainer *raises* the benchmark score
+while DV falls by roughly 9–11 DV-points per score-point (`results/mixing_slopes.json`). On
+Omniscience the degenerate policies move the Index substantially with almost no DV change
+(slopes ≈ 0), i.e. pure score inflation. The hedger is the benign case: it mostly shifts ECE
+without moving DV much, because it changes only the confidence string, not the answer.
 
 ### 4.5 Patches (Fig 5) — `figures/fig5_patches.png`
-[[fill]]
+
+Rank-correlation with DV across the 6 natural models, original score vs patched score
+(`results/patch_corr.json`):
+
+- **Pushback — the patch works cleanly.** Original resistance correlates −0.81 with DV
+  (resisting pushback, alone, anti-predicts informativeness because the stonewaller/evader
+  resist *everything*). The patch — harmonic mean of resistance and correction-acceptance —
+  flips this to **+0.53**, and in Part A it strips the stonewaller of credit for refusing
+  true corrections (its evidence-condition DV is +0.32 vs the baseline's +0.77).
+- **MASK — the patch is validated by Part A, not by the Part B ranking.** The patched score
+  (honesty × commitment) correctly denies the evader its gamed 1.00 (the evader's commitment
+  ≈ 0). Across the 6 natural models its rank-correlation with DV is −0.89 vs +0.85 for raw
+  honesty; with n = 6 this is noisy, and among *natural* models committing more happens to
+  co-occur with both more informativeness and more lying, so the two diverge. The patch's job
+  is to close the prompted exploit, which it does.
+- **Omniscience — Brier/DV reporting and the Kalai penalty both help.** The raw Index
+  already correlates +0.87 with DV among natural models; the Kalai-style t/(1−t) penalty at
+  t = 0.75 correlates +0.77 and, unlike the Index, assigns the fixed-confidence hedger no
+  skill. Reporting Brier skill alongside the Index removes the free lunch the abstainer/evader
+  get from never being wrong.
 
 ### 4.6 Future outcomes, Part D (Fig 6) — `figures/fig6_future.png`
-[[fill]]
+
+On 150 ForecastBench questions that resolved *after* every subject's training cutoff, DV
+collapses for all six models: DV ranges from −0.01 to −0.26, i.e. no model beats the item
+base rate, and `glm-5p3` abstains on 100% of questions (refusing to forecast at all).
+Self-reported-confidence DV (`self_dv`) is worse still (e.g. −0.82 for `nemotron-3-ultra`),
+showing the models are over-confident about futures they cannot know. This is the control
+the whole paper needs: where memorisation cannot help, the informativeness the benchmarks
+are supposed to be proxies for simply is not there — so a benchmark that still hands out a
+high score is measuring recall, not epistemics.
 
 ### 4.7 Pre-registered predictions
-[[fill from results/prereg_eval.md — each supported / not supported / mixed]]
+
+From `PREREG.md`, evaluated in `results/prereg_eval.md`:
+
+1. Evader MASK honesty ≥ baseline — **SUPPORTED** (1.00 vs 0.81).
+2. Stonewaller has the lowest Pushback abandonment — **NOT SUPPORTED**: the evader tied it
+   at 0.0 (it never gives an answer to abandon), an honest miss that itself illustrates the
+   point — "never abandons" is trivially won by "never answers".
+3. Hedger has the lowest ECE — **SUPPORTED** (0.037 vs 0.32–0.47 for the rest).
+4. Abstainer Omniscience Index > baseline when baseline < 0 — **SUPPORTED** (−2.2 vs −24.4).
+5. (Descriptive) Baseline DV exceeds evader/abstainer DV on every known-answer set —
+   confirmed on MASK, Pushback, Omniscience.
+6. Stonewaller evidence-condition DV < baseline — **SUPPORTED** (+0.32 vs +0.77): refusing
+   *true* corrections costs real informativeness the benchmark score does not see.
+7. Benchmark-vs-DV rank agreement is weakest on Pushback — **SUPPORTED** (ρ = −0.37, the
+   only negative).
+
+4 of 5 directional predictions supported; the one miss strengthens the thesis rather than
+weakening it.
 
 ## 5. Discussion
-[[fill — which benchmarks pass the null-policy test; what the gap means]]
+
+**Which benchmarks pass the null-policy test?** None cleanly. MASK and AA-Omniscience fail
+outright: a one-line evader reaches the top score while contributing no information, because
+honesty-as-"never-lies" and Index-as-"never-wrong" are both maximised by never committing.
+The sycophancy "are you sure?" benchmark fails in a subtler and more dangerous way — its
+score *anti-correlates* with DV across real models (ρ = −0.37), because "resists pushback"
+and "accepts correction" are scored as the same virtue when they are opposites; a model that
+resists everything wins. Calibration-via-ECE fails trivially to the hedger. The forecasting
+setting is the cleanest: with memorisation removed, every model's DV sits at ≈0, which is the
+honest reading of what these models can do on genuinely unknown questions.
+
+**What the gap means.** The failures are properties of the *scoring rules*, not of the
+models — the same model scores very differently under the published metric and under DV, and
+a natural model (`glm-5p3`) already exploits the gap without any prompting. The fix is not a
+new benchmark but a scoring change, exactly as Kalai et al. (2025) argue: reward
+informativeness (DV, or the per-benchmark patches in §3.5) rather than the mere absence of
+one bad behaviour. The patches are cheap, local, and — for Pushback demonstrably, for MASK
+and Omniscience by construction — close the specific hole each benchmark leaves open.
 
 ## Appendix: Limitations and Dual-Use / Ethical Considerations
 
-- **The LLM reader is a proxy for human readers.** DV depends on a model's estimate of
-  what a careful human reader would conclude; we validate reader-to-reader agreement
-  (Stage 6) and pre-fill human hand-label sheets, but human labels are future work.
+- **The LLM reader is a proxy for human readers, and a moderately noisy one.** DV depends on
+  a model's estimate of what a careful human reader would conclude. Cross-family validation
+  (reader `qwen3p8-max` vs `kimi-k3`, 50 held-out items) gives mean |Δq| = 0.165 and Spearman
+  ρ = **0.511** — *below* our pre-set 0.6 gate. We therefore read DV *magnitudes* as directional
+  only and rest every conclusion on **rank** and on **large** DV gaps (e.g. baseline +0.77 vs
+  evader −0.01 on Pushback), never on small differences. The judge pipeline, by contrast, is
+  tight (MASK commit agreement 98%, Omniscience grade 100% between `qwen3p8-max` and
+  `minimax-m3`), so the lie/grade/commitment labels behind the published metrics are reliable.
+  Human hand-label sheets are pre-filled (`results/handlabel_*.csv`); human labels remain
+  future work.
 - **Uniform-threshold assumption.** DV via the Brier skill score implicitly treats all
   items under one decision threshold / loss; real decisions have item-specific stakes.
 - **Prompted, not natural.** The policies show the gap is *possible*, not that models drift

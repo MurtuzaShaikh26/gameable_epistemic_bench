@@ -1,11 +1,11 @@
 {
   "by_model": {
     "accounts/fireworks/models/qwen3p8-max": {
-      "tokens_in": 4834935,
-      "tokens_out": 102582,
-      "calls": 20500,
-      "cached": 8376,
-      "usd": 4.443765299999992
+      "tokens_in": 6450268,
+      "tokens_out": 128634,
+      "calls": 26163,
+      "cached": 8770,
+      "usd": 5.921011799999982
     },
     "accounts/fireworks/models/deepseek-v4p1-flash": {
       "tokens_in": 1894411,
@@ -22,15 +22,36 @@
       "usd": 2.844797399999993
     },
     "accounts/fireworks/models/minimax-m3": {
-      "tokens_in": 80539,
-      "tokens_out": 45394,
-      "calls": 400,
+      "tokens_in": 386881,
+      "tokens_out": 194826,
+      "calls": 1400,
       "cached": 0,
-      "usd": 0.11333970000000003
+      "usd": 0.523536300000001
+    },
+    "accounts/fireworks/models/kimi-k3": {
+      "tokens_in": 245959,
+      "tokens_out": 211539,
+      "calls": 1400,
+      "cached": 0,
+      "usd": 0.4117482000000001
+    },
+    "accounts/fireworks/models/glm-5p3": {
+      "tokens_in": 214201,
+      "tokens_out": 711866,
+      "calls": 1400,
+      "cached": 0,
+      "usd": 0.8334603
+    },
+    "accounts/fireworks/models/nemotron-3-ultra-nvfp4": {
+      "tokens_in": 268135,
+      "tokens_out": 234998,
+      "calls": 1400,
+      "cached": 0,
+      "usd": 0.45281969999999966
     }
   },
   "price_per_mtok": 0.9,
-  "n_calls": 38980,
-  "n_cached": 13272,
-  "total_usd": 9.999498599999988
+  "n_calls": 49843,
+  "n_cached": 13666,
+  "total_usd": 13.58496989999998
 }
